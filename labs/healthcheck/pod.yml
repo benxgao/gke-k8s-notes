@@ -1,0 +1,47 @@
+# kubectl apply -f healthcheck/pod.yml
+# kubectl get pod healthcheck
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: healthcheck
+  labels:
+    test: healthcheck
+spec:
+  restartPolicy: Never
+  containers:
+    - name: healthcheck
+      image: busybox
+      # Create file and delete it after 60 seconds
+      args:
+        - /bin/sh
+        - -c
+        - |
+          touch /tmp/healthcheck;
+          sleep 60;
+          rm -rf /tmp/healthcheck;
+          sleep 10;
+
+      # Check the file every 5 seconds, and pause it if the file is not found
+      # Check the file every 5 seconds, and restart it if the file is not found
+      # readinessProbe:
+      #   exec:
+      #     command:
+      #       - cat
+      #       - /tmp/healthcheck
+      #   initialDelaySeconds: 5
+      #   periodSeconds: 5
+      # livenessProbe:
+      #   exec:
+      #     command:
+      #       - cat
+      #       - /tmp/healthcheck
+      #   initialDelaySeconds: 5
+      #   periodSeconds: 5
+
+# volumeMounts:
+#   - name: healthcheck-volume
+#     mountPath: /tmp
+#     volumes:
+#       - name: healthcheck-volume
+#         emptyDir: {}

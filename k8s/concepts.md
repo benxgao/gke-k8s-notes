@@ -1,0 +1,213 @@
+# 🧠 Kubernetes Learning Notes – Complete Guide
+
+---
+
+## 🧪 Local Development Tools
+
+- Skaffold: CLI tool that handles the build, push, and deploy loop for Kubernetes applications. It watches source code and automatically deploys updates.
+- Buildpacks (buildpacks.io): Framework to transform application source code into container images without writing Dockerfiles.
+
+---
+
+## 🏗️ Kubernetes Architecture
+
+### 🧩 Master Node Components
+
+These coordinate the entire cluster:
+
+- API Server
+
+  - Entry point to the Kubernetes control plane.
+  - Accepts RESTful commands (`kubectl`, clients).
+  - Validates and processes resource definitions (Deployments, Pods, etc.).
+
+- Scheduler
+
+  - Assigns newly created Pods to suitable Nodes.
+  - Considers resource availability, affinity/anti-affinity rules, taints/tolerations.
+
+- Controller Manager
+
+  - Runs all controller processes (e.g., Node Controller, Job Controller, etc.).
+  - Continuously reconciles desired and current states.
+
+- etcd
+
+  - Key-value store for all cluster data (state, configs, secrets).
+  - Highly consistent; critical to cluster health.
+
+---
+
+### 🧱 Node Components
+
+#### 📦 Worker Node (a.k.a. Minion)
+
+Hosts and runs application workloads:
+
+- kubelet
+
+  - Agent on each Node.
+  - Receives Pod specs from API Server and manages container lifecycle.
+  - Registers Node to the cluster.
+  - Reports health/status to the control plane.
+
+- Container Runtime
+
+  - Responsible for running containers (e.g., containerd, CRI-O, Docker).
+
+- kube-proxy
+
+  - Manages network rules on each Node.
+  - Forwards traffic to correct Pods.
+  - Supports TCP/UDP load balancing.
+
+- Pod Network
+
+  - Every Pod gets a unique IP.
+  - Implemented via network plugins like Flannel, Calico, Weave, etc.
+
+---
+
+## 🧠 Core Kubernetes Objects & Concepts
+
+### 🎯 Pod
+
+- Smallest unit of deployment in Kubernetes.
+- Encapsulates one or more containers with:
+
+  - Shared storage (Volumes).
+  - Shared network namespace (same IP/Port).
+  - Shared lifecycle (created and destroyed together).
+
+- Pods are ephemeral. Avoid relying on their IPs.
+
+### ⚙️ Controllers
+
+Ensure system always moves toward desired state.
+
+#### Types of Controllers
+
+1. Deployment
+
+   - For stateless applications.
+   - Manages rollout and rollback of changes.
+
+2. ReplicaSet
+
+   - Maintains a stable set of replica Pods.
+   - Used by Deployments to manage Pods.
+
+3. StatefulSet
+
+   - For stateful applications (e.g., databases).
+   - Ensures predictable Pod names and startup order.
+
+4. DaemonSet
+
+   - Runs a copy of a Pod on every Node.
+   - Used for logging, monitoring, and networking daemons.
+
+5. Job
+
+   - Creates one or more Pods to run a task and terminate after success.
+   - Parameters like `parallelism`, `completions` manage execution strategy.
+
+6. CronJob
+
+   - Similar to `Job`, but scheduled to run at specified intervals (like Unix cron).
+
+---
+
+### 🕸️ Services
+
+Abstract way to expose applications running as Pods.
+
+- ClusterIP (default): Internal cluster communication.
+- NodePort: Exposes the service on each Node’s IP at a static port.
+- LoadBalancer: Provisions external load balancer via cloud provider.
+- ExternalName: Maps service name to an external DNS name.
+
+🧠 _Services select Pods using `labels` and `selectors`._
+
+---
+
+### 🌐 DNS & Networking
+
+- Kube DNS / CoreDNS: Cluster-wide DNS system.
+- Each Pod is pre-configured with DNS resolver pointing to the cluster DNS service.
+- Helps with service discovery (e.g., `myservice.mynamespace.svc.cluster.local`).
+
+---
+
+### 📦 Namespaces
+
+- Logical partitioning of cluster resources.
+- Useful for multi-tenant environments and resource isolation.
+- Common built-in Namespaces:
+
+  - `default`
+  - `kube-system`
+  - `kube-public`
+  - `kube-node-lease`
+
+---
+
+### 🛠️ Volumes & Persistent Storage
+
+- EmptyDir: Temporary storage for a Pod’s lifetime.
+- hostPath: Mounts file from host Node.
+- PersistentVolume (PV) and PersistentVolumeClaim (PVC):
+
+  - Abstractions for dynamic storage provisioning.
+  - Enables separation of storage from Pods.
+
+- StorageClass: Specifies storage types (e.g., SSD, HDD) and provisioners.
+
+---
+
+## 🔁 Kubernetes Lifecycle Example: Deploying `httpd-app`
+
+### Scenario: Deploy `httpd-app` with 2 replicas
+
+1. User executes: `kubectl apply -f deployment.yaml`
+2. API Server receives request, stores spec in `etcd`.
+3. Controller Manager creates a `Deployment` → which spawns a `ReplicaSet` → which creates 2 `Pods`.
+4. Scheduler assigns Pods to Nodes (e.g., `k8s-node1`, `k8s-node2`).
+5. kubelet on each Node starts containers as per spec.
+6. Flannel (CNI) assigns IPs to Pods.
+7. No Service defined yet, so kube-proxy is idle.
+
+---
+
+## 📊 Key Features & Best Practices
+
+### 🔁 Self-Healing
+
+- Kubernetes replaces failed Pods automatically.
+- Controller ensures desired state matches real state.
+
+### 🔄 Rolling Updates
+
+- Controlled updates via `maxSurge`, `maxUnavailable`.
+- Use `--record` to track Deployment versions and allow rollback.
+
+### 🚫 Avoid Direct Pod IP Use
+
+- Pod IPs change frequently.
+- Always access Pods via Services or Ingress.
+
+---
+
+## 🧠 Additional Concepts
+
+- Labels & Selectors: Metadata for grouping and querying Kubernetes objects.
+- Taints & Tolerations: Control Pod scheduling based on Node constraints.
+- Affinity/Anti-Affinity: Influences Pod co-location or separation.
+- Resource Limits/Requests: Define CPU/memory usage guarantees and limits.
+- Ingress: Layer 7 HTTP routing to expose Services with path-based or host-based rules.
+- Horizontal Pod Autoscaler (HPA): Scales Pods based on CPU/memory usage or custom metrics.
+- Custom Resource Definitions (CRD): Allows extending Kubernetes with new resource types.
+
+---
+
+Would you like this exported as a PDF or Markdown file for easier studying?

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: producer-consumer
+  labels:
+    test: healthcheck
+spec:
+  containers:
+    - name: producer
+      image: busybox
+      volumeMounts:
+        - name: shared-volume # shared
+          mountPath: /producer_dir
+      args:
+        - /bin/sh
+        - -c
+        - |
+          echo "Hello, World!" > /producer_dir/hello.txt;
+          sleep 60000;
+
+    - name: consumer
+      image: busybox
+      volumeMounts:
+        - name: shared-volume # shared
+          mountPath: /consumer_dir
+      args:
+        - /bin/sh
+        - -c
+        - |
+          cat /consumer_dir/hello.txt;
+          sleep 60000;
+
+  volumes:
+    - name: shared-volume # shared
+      emptyDir: {}
+# kubectl apply -f volumes/pod.yml
+# kubectl logs producer-consumer consumer
