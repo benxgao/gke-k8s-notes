@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+# kubectl apply -f postgres-pvc.yaml
+# kubectl get pvc
+# kubectl describe pvc postgres-data

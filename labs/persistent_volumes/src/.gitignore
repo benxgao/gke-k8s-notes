@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+
+# Build output
+lib/
+dist/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# System files
+.DS_Store
+
+# Credentials
+**/gcp_credentials.json
+
+# History
+.history

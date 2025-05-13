@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nodejs-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+        - name: nodejs-app
+          image: nodejs-app:latest
+          imagePullPolicy: Never # use the local image
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: db-credentials
+
+# kubectl apply -f nodejs-replicaset.yml

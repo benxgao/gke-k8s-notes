@@ -1,0 +1,62 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "Node.js TypeScript project for persistent volumes demo.",
+  "license": "ISC",
+  "author": "Ben Gao <xingbingao@gmail.com>",
+  "type": "commonjs",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "kubernetes",
+    "persistent-volumes",
+    "demo"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "lib/",
+    "index.ts"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf lib && tsc",
+    "lint": "eslint . --ext .ts",
+    "start": "node lib/index.js",
+    "dev": "nodemon --watch src --ext ts,json --exec ts-node ./index.ts",
+    "clean": "rm -rf lib",
+    "prepare": "npm run build",
+    "prestart": "npm run build"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.8",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.25.1",
+    "@types/express": "^4.17.21",
+    "@types/pg": "^8.15.1",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "eslint": "^9.25.1",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "firebase-tools": "^14.1.0",
+    "globals": "^16.0.0",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
