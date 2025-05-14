@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: nodejs-app
-          image: nodejs-app:latest
+          image: nodejs-app:latest # us-central1-docker.pkg.dev/[YOUR_PROJECT_ID]/nodejs-app-repo/nodejs-app:latest
           imagePullPolicy: Never # use the local image
           ports:
             - containerPort: 3000

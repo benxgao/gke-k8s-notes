@@ -47,3 +47,21 @@ kubectl port-forward svc/nodejs-local-service 3000:3000
 
 kubectl logs [pod-name]
 ```
+
+### 3. Test in GKE
+
+```sh
+gcloud auth configure-docker
+
+gcloud artifacts repositories create nodejs-app-repo \
+  --repository-format=docker \
+  --location=us-central1 \
+  --description="Docker repository for Node.js app"
+```
+
+```sh
+cd labs/persistent_volumes/src
+docker build -t us-central1-docker.pkg.dev/co-workout-next/nodejs-app-repo/nodejs-app:latest .
+
+docker push us-central1-docker.pkg.dev/co-workout-next/nodejs-app-repo/nodejs-app:latest
+```
