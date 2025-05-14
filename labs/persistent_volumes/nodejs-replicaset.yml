@@ -2,6 +2,11 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: nodejs-app
+  labels:
+    app: nodejs-app
+    tier: backend
+  annotations:
+    description: "Node.js application ReplicaSet"
 spec:
   replicas: 2
   selector:
@@ -11,6 +16,9 @@ spec:
     metadata:
       labels:
         app: nodejs-app
+        tier: backend
+      annotations:
+        description: "Node.js application Pod"
     spec:
       containers:
         - name: nodejs-app
@@ -21,5 +29,24 @@ spec:
           envFrom:
             - secretRef:
                 name: db-credentials
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 # kubectl apply -f nodejs-replicaset.yml

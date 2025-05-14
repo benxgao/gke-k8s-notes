@@ -2,9 +2,16 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
+  labels:
+    app: postgres
+    tier: database
+  annotations:
+    description: "PostgreSQL database service for persistent volumes demo"
 spec:
+  type: ClusterIP
   selector:
     app: postgres
+    tier: database
   ports:
     - protocol: TCP
       port: 5432
