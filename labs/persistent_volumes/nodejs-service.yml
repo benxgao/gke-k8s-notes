@@ -3,13 +3,12 @@ kind: Service
 metadata:
   name: nodejs-local-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: nodejs-app
   ports:
     - port: 3000
       targetPort: 3000
-      nodePort: 30001
 
 # kubectl get pods --show-labels
 # kubectl apply -f nodejs-service.yml

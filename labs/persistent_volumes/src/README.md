@@ -65,3 +65,20 @@ docker build -t us-central1-docker.pkg.dev/co-workout-next/nodejs-app-repo/nodej
 
 docker push us-central1-docker.pkg.dev/co-workout-next/nodejs-app-repo/nodejs-app:latest
 ```
+
+```sh
+gcloud container clusters create nodejs-postgres-clusters --zone us-central1-a --num-nodes=1
+gcloud container clusters get-credentials nodejs-postgres-clusters --zone us-central1-a 
+```
+
+```sh
+kubectl delete -f .
+gcloud container clusters delete nodejs-postgres-clusters --zone us-central1-a
+```
+
+```sh
+kubectl config get-contexts
+kubectl config use-context minikube
+kubectl config delete-context [GKE_CONTEXT_NAME]
+kubectl config unset users.[GKE_USER_NAME]
+```
