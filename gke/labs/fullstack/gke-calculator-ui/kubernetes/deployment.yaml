@@ -1,0 +1,28 @@
+# grant kubectl auth
+# gcloud container clusters get-credentials gke-lab-cluster --project gke-251001 --region us-central1
+
+# kubernetes/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-ui-deployment
+spec:
+  replicas: 2 # Run 2 instances of our app for high availability
+  selector:
+    matchLabels:
+      app: calculator-ui
+  template:
+    metadata:
+      labels:
+        app: calculator-ui
+    spec:
+      containers:
+        - name: calculator-ui-container
+          # IMPORTANT: Use the image you pushed to Artifact Registry
+          image: us-central1-docker.pkg.dev/gke-251001/gke-lab-repo/calculator-ui:latest
+          resources:
+            requests:
+              cpu: "250m" # Minimum Autopilot CPU request
+              memory: "512Mi" # Minimum Autopilot Memory request
+          ports:
+            - containerPort: 80
